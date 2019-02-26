@@ -5,3 +5,4 @@ authors = ["Michael Byrne <16238945+MichaelByrneAU@users.noreply.github.com>"]
 edition = "2018"
 
 [dependencies]
+rand = "0.6.5"
