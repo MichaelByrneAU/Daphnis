@@ -1,16 +1,23 @@
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
-#[derive(Copy, Clone, Debug)]
-pub struct HitRecord {
+#[derive(Clone, Copy)]
+pub struct HitRecord<'a> {
     pub t: f64,
     pub p: Vec3,
     pub normal: Vec3,
+    pub material: &'a Material,
 }
 
-impl HitRecord {
-    pub fn new(t: f64, p: Vec3, normal: Vec3) -> HitRecord {
-        HitRecord { t, p, normal }
+impl<'a> HitRecord<'a> {
+    pub fn new(t: f64, p: Vec3, normal: Vec3, material: &'a Material) -> HitRecord {
+        HitRecord {
+            t,
+            p,
+            normal,
+            material,
+        }
     }
 }
 
@@ -27,8 +34,11 @@ impl Hitable for HitableList {
             if let Some(hit) = hitable.hit(r, t_min, t_max) {
                 match closest_hit {
                     None => closest_hit = Some(hit),
-                    Some(prev_hit) if hit.t < prev_hit.t => closest_hit = Some(hit),
-                    Some(_) => {}
+                    Some(prev_hit) => {
+                        if hit.t < prev_hit.t {
+                            closest_hit = Some(hit)
+                        }
+                    }
                 }
             }
         }

@@ -2,12 +2,14 @@ use rand::Rng;
 
 mod camera;
 mod hitable;
+mod material;
 mod ray;
 mod sphere;
 mod vec3;
 
 use camera::Camera;
 use hitable::{Hitable, HitableList};
+use material::{Lambertian, Metal};
 use ray::Ray;
 use sphere::Sphere;
 use vec3::Vec3;
@@ -25,8 +27,26 @@ fn main() {
     let camera = Camera::new(origin, lower_left_corner, horizontal, vertical);
 
     let spheres = vec![
-        Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5),
-        Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0),
+        Sphere::new(
+            Vec3::new(0.0, 0.0, -1.0),
+            0.5,
+            Box::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3))),
+        ),
+        Sphere::new(
+            Vec3::new(0.0, -100.5, -1.0),
+            100.0,
+            Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))),
+        ),
+        Sphere::new(
+            Vec3::new(1.0, 0.0, -1.0),
+            0.5,
+            Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.7)),
+        ),
+        Sphere::new(
+            Vec3::new(-1.0, 0.0, -1.0),
+            0.5,
+            Box::new(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.1)),
+        ),
     ];
 
     let world = HitableList(
@@ -49,7 +69,7 @@ fn main() {
                 let u = (f64::from(i) + rng.gen_range(0.0, 1.0)) / f64::from(nx);
                 let v = (f64::from(j) + rng.gen_range(0.0, 1.0)) / f64::from(ny);
                 let r = camera.get_ray(u, v);
-                col += colour(&r, &world);
+                col += colour(&r, &world, 0);
             }
             col /= f64::from(ns);
             col = Vec3::new(col[0].sqrt(), col[1].sqrt(), col[2].sqrt());
@@ -62,29 +82,19 @@ fn main() {
     }
 }
 
-fn random_in_unit_sphere() -> Vec3 {
-    let mut point = Vec3::new(std::f64::MAX, std::f64::MAX, std::f64::MAX);
-    let mut rng = rand::thread_rng();
-    loop {
-        if point.squared_length() < 1.0 {
-            break;
-        }
-        point = Vec3::new(
-            rng.gen_range(-0.5, 0.5),
-            rng.gen_range(-0.5, 0.5),
-            rng.gen_range(-0.5, 0.5),
-        );
-    }
-    point
-}
-
-fn colour(r: &Ray, world: &Hitable) -> Vec3 {
+fn colour(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
     let hit = world.hit(r, 0.0001, std::f64::MAX);
 
     match hit {
         Some(hit_record) => {
-            let target = hit_record.p + hit_record.normal + random_in_unit_sphere();
-            0.5 * colour(&Ray::new(hit_record.p, target - hit_record.p), world)
+            if depth < 50 {
+                let scatter = hit_record.material.scatter(r, &hit_record);
+                scatter
+                    .attenuation
+                    .elem_wise_mul(colour(&scatter.ray, world, depth + 1))
+            } else {
+                Vec3::new(0.0, 0.0, 0.0)
+            }
         }
         None => {
             let unit_direction = r.direction.unit_vector();
