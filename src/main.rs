@@ -15,52 +15,25 @@ use sphere::Sphere;
 use vec3::Vec3;
 
 fn main() {
-    let nx = 400;
+    let nx = 300;
     let ny = 200;
-    let ns = 100;
+    let ns = 11;
+
+    let look_from = Vec3::new(13.0, 2.0, 3.0);
+    let look_at = Vec3::new(0.0, 0.0, 0.0);
+    let dist_to_focus = 10.0;
 
     let camera = Camera::new(
-        Vec3::new(-2.0, 2.0, 1.0),
-        Vec3::new(0.0, 0.0, -1.0),
+        look_from,
+        look_at,
         Vec3::new(0.0, 1.0, 0.0),
         20.0,
         f64::from(nx) / f64::from(ny),
+        0.1,
+        dist_to_focus,
     );
 
-    let spheres = vec![
-        Sphere::new(
-            Vec3::new(0.0, 0.0, -1.0),
-            0.5,
-            Box::new(Lambertian::new(Vec3::new(0.8, 0.3, 0.3))),
-        ),
-        Sphere::new(
-            Vec3::new(0.0, -100.5, -1.0),
-            100.0,
-            Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0))),
-        ),
-        Sphere::new(
-            Vec3::new(1.0, 0.0, -1.0),
-            0.5,
-            Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.7)),
-        ),
-        Sphere::new(
-            Vec3::new(-1.0, 0.0, -1.0),
-            0.5,
-            Box::new(Dielectric::new(1.5)),
-        ),
-        Sphere::new(
-            Vec3::new(-1.0, 0.0, -1.0),
-            -0.45,
-            Box::new(Dielectric::new(1.5)),
-        ),
-    ];
-
-    let world = HitableList(
-        spheres
-            .into_iter()
-            .map(|s| Box::new(s) as Box<dyn Hitable>)
-            .collect(),
-    );
+    let world = random_scene();
 
     let mut rng = rand::thread_rng();
 
@@ -69,6 +42,7 @@ fn main() {
     println!("255");
 
     for j in (0..ny).rev() {
+        dbg!(j);
         for i in 0..nx {
             let mut col = Vec3::new(0.0, 0.0, 0.0);
             for _ in 0..ns {
@@ -108,4 +82,80 @@ fn colour(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
             (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
         }
     }
+}
+
+fn random_scene() -> HitableList {
+    let n = 500;
+    let mut world = HitableList(vec![]);
+
+    // Floor
+    world.0.push(Box::new(Sphere::new(
+        Vec3::new(0.0, -1000.0, 0.0),
+        1000.0,
+        Box::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+    )));
+
+    // Little balls
+    let mut rng = rand::thread_rng();
+    for a in -11..11 {
+        for b in -11..11 {
+            let choose_mat = rng.gen_range(0.0, 1.0);
+            let center = Vec3::new(
+                f64::from(a) + 0.9 * rng.gen_range(0.0, 1.0),
+                0.2,
+                f64::from(b) + 0.9 * rng.gen_range(0.0, 1.0),
+            );
+            if (center - Vec3::new(4.0, 0.2, 0.0)).length() > 0.9 {
+                if choose_mat < 0.8 {
+                    world.0.push(Box::new(Sphere::new(
+                        center,
+                        0.2,
+                        Box::new(Lambertian::new(Vec3::new(
+                            rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
+                            rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
+                            rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
+                        ))),
+                    )));
+                } else if choose_mat < 0.95 {
+                    world.0.push(Box::new(Sphere::new(
+                        center,
+                        0.2,
+                        Box::new(Metal::new(
+                            Vec3::new(
+                                rng.gen_range(0.5, 1.0),
+                                rng.gen_range(0.5, 1.0),
+                                rng.gen_range(0.5, 1.0),
+                            ),
+                            0.5 * rng.gen_range(0.0, 0.5),
+                        )),
+                    )));
+                } else {
+                    world.0.push(Box::new(Sphere::new(
+                        center,
+                        0.2,
+                        Box::new(Dielectric::new(1.5)),
+                    )))
+                }
+            }
+        }
+    }
+
+    // Big balls
+    world.0.push(Box::new(Sphere::new(
+        Vec3::new(0.0, 1.0, 0.0),
+        1.0,
+        Box::new(Dielectric::new(1.5)),
+    )));
+    world.0.push(Box::new(Sphere::new(
+        Vec3::new(-4.0, 1.0, 0.0),
+        1.0,
+        Box::new(Lambertian::new(Vec3::new(0.4, 0.2, 0.1))),
+    )));
+    world.0.push(Box::new(Sphere::new(
+        Vec3::new(4.0, 1.0, 0.0),
+        1.0,
+        Box::new(Metal::new(Vec3::new(0.7, 0.6, 0.5), 0.0)),
+    )));
+
+    world
 }
