@@ -9,14 +9,14 @@ mod vec3;
 
 use camera::Camera;
 use hitable::{Hitable, HitableList};
-use material::{Lambertian, Metal};
+use material::{Dielectric, Lambertian, Metal};
 use ray::Ray;
 use sphere::Sphere;
 use vec3::Vec3;
 
 fn main() {
-    let nx = 200;
-    let ny = 100;
+    let nx = 400;
+    let ny = 200;
     let ns = 100;
 
     let origin = Vec3::new(0.0, 0.0, 0.0);
@@ -45,7 +45,12 @@ fn main() {
         Sphere::new(
             Vec3::new(-1.0, 0.0, -1.0),
             0.5,
-            Box::new(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.1)),
+            Box::new(Dielectric::new(1.5)),
+        ),
+        Sphere::new(
+            Vec3::new(-1.0, 0.0, -1.0),
+            -0.45,
+            Box::new(Dielectric::new(1.5)),
         ),
     ];
 
