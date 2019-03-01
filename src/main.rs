@@ -19,12 +19,13 @@ fn main() {
     let ny = 200;
     let ns = 100;
 
-    let origin = Vec3::new(0.0, 0.0, 0.0);
-    let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
-    let horizontal = Vec3::new(4.0, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, 2.0, 0.0);
-
-    let camera = Camera::new(origin, lower_left_corner, horizontal, vertical);
+    let camera = Camera::new(
+        Vec3::new(-2.0, 2.0, 1.0),
+        Vec3::new(0.0, 0.0, -1.0),
+        Vec3::new(0.0, 1.0, 0.0),
+        20.0,
+        f64::from(nx) / f64::from(ny),
+    );
 
     let spheres = vec![
         Sphere::new(
