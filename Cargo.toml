@@ -6,4 +6,5 @@ edition = "2018"
 
 [dependencies]
 image = "0.21.0"
+indicatif = "0.11.0"
 rand = "0.6.5"

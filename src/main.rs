@@ -18,7 +18,7 @@ fn main() {
     // Initialise image size and quality
     let nx = 1200;
     let ny = 800;
-    let ns = 100;
+    let ns = 1;
 
     // Initialise camera
     let look_from = Vec3::new(13.0, 2.0, 3.0);

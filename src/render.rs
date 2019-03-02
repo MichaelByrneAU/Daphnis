@@ -1,3 +1,4 @@
+use indicatif::{ProgressBar, ProgressStyle};
 use rand::Rng;
 
 use crate::geometry::{Ray, Vec3};
@@ -5,11 +6,19 @@ use crate::objects::Object;
 use crate::scene::Scene;
 
 pub fn render(scene: Scene) -> Vec<u8> {
-    let mut data = Vec::with_capacity((scene.width * scene.height * scene.samples) as usize);
+    let rays = (scene.width * scene.height * scene.samples) as usize;
 
+    // Initialise progress bar
+    let pb = ProgressBar::new(rays as u64);
+    let pb_style = ProgressStyle::default_bar()
+        .template("[{eta_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} {msg}")
+        .progress_chars("##-");
+    pb.set_style(pb_style);
+
+    // Rendering loop
+    let mut data = Vec::with_capacity(rays);
     let mut rng = rand::thread_rng();
     for j in (0..scene.height).rev() {
-        dbg!(j);
         for i in 0..scene.width {
             let mut col = Vec3::new(0.0, 0.0, 0.0);
             for _ in 0..scene.samples {
@@ -27,9 +36,13 @@ pub fn render(scene: Scene) -> Vec<u8> {
             data.push(r);
             data.push(g);
             data.push(b);
+
+            // Update progress bar
+            pb.inc(1);
         }
     }
 
+    pb.finish();
     data
 }
 
