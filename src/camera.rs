@@ -9,7 +9,6 @@ pub struct Camera {
     vertical: Vec3,
     u: Vec3,
     v: Vec3,
-    w: Vec3,
     lens_radius: f64,
 }
 
@@ -27,10 +26,11 @@ impl Camera {
         let half_height = (theta / 2.0).tan();
         let half_width = aspect * half_height;
 
-        let origin = look_from;
         let w = (look_from - look_at).unit_vector();
         let u = v_up.cross(w).unit_vector();
         let v = w.cross(u);
+
+        let origin = look_from;
         let lower_left_corner =
             origin - half_width * focus_dist * u - half_height * focus_dist * v - focus_dist * w;
         let horizontal = 2.0 * half_width * focus_dist * u;
@@ -45,7 +45,6 @@ impl Camera {
             vertical,
             u,
             v,
-            w,
             lens_radius,
         }
     }
