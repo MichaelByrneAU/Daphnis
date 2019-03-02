@@ -1,18 +1,16 @@
 use rand::Rng;
 
 mod camera;
+mod geometry;
 mod hitable;
 mod materials;
-mod ray;
 mod sphere;
-mod vec3;
 
 use camera::Camera;
+use geometry::{Ray, Vec3};
 use hitable::{Hitable, HitableList};
 use materials::{Dielectric, Lambertian, Metal};
-use ray::Ray;
 use sphere::Sphere;
-use vec3::Vec3;
 
 fn main() {
     let nx = 300;

@@ -1,9 +1,8 @@
 use rand::Rng;
 
+use crate::geometry::{Ray, Vec3};
 use crate::hitable::HitRecord;
 use crate::materials::{Material, Scatter};
-use crate::ray::Ray;
-use crate::vec3::Vec3;
 
 #[derive(Debug)]
 pub struct Dielectric {

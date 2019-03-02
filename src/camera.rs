@@ -1,7 +1,6 @@
 use std::f64::consts::PI;
 
-use crate::ray::Ray;
-use crate::vec3::{random_in_unit_sphere, Vec3};
+use crate::geometry::{random_in_unit_sphere, Ray, Vec3};
 
 pub struct Camera {
     origin: Vec3,
