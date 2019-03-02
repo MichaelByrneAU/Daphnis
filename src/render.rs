@@ -9,6 +9,7 @@ pub fn render(scene: Scene) -> Vec<u8> {
 
     let mut rng = rand::thread_rng();
     for j in (0..scene.height).rev() {
+        dbg!(j);
         for i in 0..scene.width {
             let mut col = Vec3::new(0.0, 0.0, 0.0);
             for _ in 0..scene.samples {
