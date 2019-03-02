@@ -2,14 +2,14 @@ use rand::Rng;
 
 mod camera;
 mod hitable;
-mod material;
+mod materials;
 mod ray;
 mod sphere;
 mod vec3;
 
 use camera::Camera;
 use hitable::{Hitable, HitableList};
-use material::{Dielectric, Lambertian, Metal};
+use materials::{Dielectric, Lambertian, Metal};
 use ray::Ray;
 use sphere::Sphere;
 use vec3::Vec3;

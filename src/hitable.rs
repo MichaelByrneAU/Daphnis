@@ -1,4 +1,4 @@
-use crate::material::Material;
+use crate::materials::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
 
