@@ -17,7 +17,7 @@ use vec3::Vec3;
 fn main() {
     let nx = 300;
     let ny = 200;
-    let ns = 11;
+    let ns = 10;
 
     let look_from = Vec3::new(13.0, 2.0, 3.0);
     let look_at = Vec3::new(0.0, 0.0, 0.0);
@@ -69,16 +69,14 @@ fn colour(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
         Some(hit_record) => {
             if depth < 50 {
                 let scatter = hit_record.material.scatter(r, &hit_record);
-                scatter
-                    .attenuation
-                    .elem_wise_mul(colour(&scatter.ray, world, depth + 1))
+                scatter.attenuation * colour(&scatter.ray, world, depth + 1)
             } else {
                 Vec3::new(0.0, 0.0, 0.0)
             }
         }
         None => {
             let unit_direction = r.direction.unit_vector();
-            let t = 0.5 * (unit_direction.y() + 1.0);
+            let t = 0.5 * (unit_direction.1 + 1.0);
             (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
         }
     }

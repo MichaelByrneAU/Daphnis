@@ -3,8 +3,8 @@ use std::fmt::Debug;
 use rand::Rng;
 
 use crate::hitable::HitRecord;
-use crate::ray::{random_in_unit_sphere, Ray};
-use crate::vec3::Vec3;
+use crate::ray::Ray;
+use crate::vec3::{random_in_unit_sphere, Vec3};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Scatter {

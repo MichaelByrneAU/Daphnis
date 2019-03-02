@@ -1,7 +1,7 @@
 use std::f64::consts::PI;
 
-use crate::ray::{random_in_unit_sphere, Ray};
-use crate::vec3::Vec3;
+use crate::ray::Ray;
+use crate::vec3::{random_in_unit_sphere, Vec3};
 
 pub struct Camera {
     origin: Vec3,
@@ -53,7 +53,7 @@ impl Camera {
 
     pub fn get_ray(&self, s: f64, t: f64) -> Ray {
         let rd = self.lens_radius * random_in_unit_sphere();
-        let offset = self.u * rd.x() + self.v * rd.y();
+        let offset = self.u * rd.0 + self.v * rd.1;
         Ray::new(
             self.origin + offset,
             self.lower_left_corner + s * self.horizontal + t * self.vertical - self.origin - offset,
