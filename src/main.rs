@@ -1,21 +1,26 @@
+use image;
 use rand::Rng;
 
 mod camera;
 mod geometry;
 mod materials;
 mod objects;
+mod render;
+mod scene;
 
 use camera::Camera;
-use geometry::{Ray, Vec3};
+use geometry::Vec3;
 use materials::{Dielectric, Lambertian, Metal};
-use objects::Sphere;
-use objects::{Object, ObjectList};
+use objects::{ObjectList, Sphere};
+use scene::Scene;
 
 fn main() {
+    // Initialise image size and quality
     let nx = 300;
     let ny = 200;
     let ns = 10;
 
+    // Initialise camera
     let look_from = Vec3::new(13.0, 2.0, 3.0);
     let look_at = Vec3::new(0.0, 0.0, 0.0);
     let dist_to_focus = 10.0;
@@ -30,57 +35,20 @@ fn main() {
         dist_to_focus,
     );
 
-    let world = random_scene();
+    // Initialise world
+    let world = random_world();
 
-    let mut rng = rand::thread_rng();
+    // Initialise scene
+    let scene = Scene::new(nx, ny, ns, camera, world);
 
-    println!("P3");
-    println!("{} {}", nx, ny);
-    println!("255");
+    // Render scene
+    let data = render::render(scene);
 
-    for j in (0..ny).rev() {
-        dbg!(j);
-        for i in 0..nx {
-            let mut col = Vec3::new(0.0, 0.0, 0.0);
-            for _ in 0..ns {
-                let u = (f64::from(i) + rng.gen_range(0.0, 1.0)) / f64::from(nx);
-                let v = (f64::from(j) + rng.gen_range(0.0, 1.0)) / f64::from(ny);
-                let r = camera.get_ray(u, v);
-                col += colour(&r, &world, 0);
-            }
-            col /= f64::from(ns);
-            col = Vec3::new(col[0].sqrt(), col[1].sqrt(), col[2].sqrt());
-            let ir = (255.99 * col[0]) as i32;
-            let ig = (255.99 * col[1]) as i32;
-            let ib = (255.99 * col[2]) as i32;
-
-            println!("{} {} {}", ir, ig, ib);
-        }
-    }
+    // Generate image
+    image::save_buffer("output.png", &data, nx, ny, image::RGB(8)).unwrap();
 }
 
-fn colour(r: &Ray, world: &Object, depth: i32) -> Vec3 {
-    let hit = world.hit(r, 0.0001, std::f64::MAX);
-
-    match hit {
-        Some(hit_record) => {
-            if depth < 50 {
-                let scatter = hit_record.material.scatter(r, &hit_record);
-                scatter.attenuation * colour(&scatter.ray, world, depth + 1)
-            } else {
-                Vec3::new(0.0, 0.0, 0.0)
-            }
-        }
-        None => {
-            let unit_direction = r.direction.unit_vector();
-            let t = 0.5 * (unit_direction.1 + 1.0);
-            (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
-        }
-    }
-}
-
-fn random_scene() -> ObjectList {
-    let n = 500;
+fn random_world() -> ObjectList {
     let mut world = ObjectList(vec![]);
 
     // Floor
