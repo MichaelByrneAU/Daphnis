@@ -1,3 +1,5 @@
+#![allow(clippy::many_single_char_names)]
+
 use crate::geometry::{Ray, Vec3};
 use crate::materials::Material;
 use crate::objects::{HitRecord, Object};
