@@ -1,6 +1,10 @@
 use crate::geometry::{Ray, Vec3};
 use crate::materials::Material;
 
+mod sphere;
+
+pub use crate::objects::sphere::Sphere;
+
 #[derive(Clone, Copy)]
 pub struct HitRecord<'a> {
     pub t: f64,
@@ -20,13 +24,13 @@ impl<'a> HitRecord<'a> {
     }
 }
 
-pub trait Hitable {
+pub trait Object {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
 }
 
-pub struct HitableList(pub Vec<Box<dyn Hitable>>);
+pub struct ObjectList(pub Vec<Box<dyn Object>>);
 
-impl Hitable for HitableList {
+impl Object for ObjectList {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let mut closest_hit: Option<HitRecord> = None;
         for hitable in self.0.iter() {

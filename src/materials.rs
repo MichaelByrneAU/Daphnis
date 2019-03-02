@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use crate::geometry::{Ray, Vec3};
-use crate::hitable::HitRecord;
+use crate::objects::HitRecord;
 
 mod dielectric;
 mod lambertian;

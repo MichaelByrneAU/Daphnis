@@ -2,15 +2,14 @@ use rand::Rng;
 
 mod camera;
 mod geometry;
-mod hitable;
 mod materials;
-mod sphere;
+mod objects;
 
 use camera::Camera;
 use geometry::{Ray, Vec3};
-use hitable::{Hitable, HitableList};
 use materials::{Dielectric, Lambertian, Metal};
-use sphere::Sphere;
+use objects::Sphere;
+use objects::{Object, ObjectList};
 
 fn main() {
     let nx = 300;
@@ -60,7 +59,7 @@ fn main() {
     }
 }
 
-fn colour(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
+fn colour(r: &Ray, world: &Object, depth: i32) -> Vec3 {
     let hit = world.hit(r, 0.0001, std::f64::MAX);
 
     match hit {
@@ -80,9 +79,9 @@ fn colour(r: &Ray, world: &Hitable, depth: i32) -> Vec3 {
     }
 }
 
-fn random_scene() -> HitableList {
+fn random_scene() -> ObjectList {
     let n = 500;
-    let mut world = HitableList(vec![]);
+    let mut world = ObjectList(vec![]);
 
     // Floor
     world.0.push(Box::new(Sphere::new(
