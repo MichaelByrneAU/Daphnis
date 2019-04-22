@@ -1,7 +1,7 @@
 use crate::materials::{Material, Scatter};
 use crate::objects::HitRecord;
 use crate::ray::Ray;
-use crate::vector::{random_in_unit_sphere, Vector};
+use crate::vector::Vector;
 
 #[derive(Debug)]
 pub struct Metal {
@@ -19,7 +19,7 @@ impl Metal {
 impl Material for Metal {
     fn scatter(&self, r_in: &Ray, hit: &HitRecord) -> Scatter {
         let reflected = reflect(&r_in.direction.unit_vector(), &hit.normal);
-        let scattered = Ray::new(hit.p, reflected + self.fuzz * random_in_unit_sphere());
+        let scattered = Ray::new(hit.p, reflected + self.fuzz * Vector::random());
         Scatter::new(self.albedo, scattered)
     }
 }

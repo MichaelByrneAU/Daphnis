@@ -1,6 +1,6 @@
-use crate::vector::Vector;
 use crate::materials::Material;
 use crate::ray::Ray;
+use crate::vector::Vector;
 
 mod sphere;
 

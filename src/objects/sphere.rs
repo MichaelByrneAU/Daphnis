@@ -1,9 +1,9 @@
 #![allow(clippy::many_single_char_names)]
 
-use crate::vector::Vector;
 use crate::materials::Material;
 use crate::objects::{HitRecord, Object};
 use crate::ray::Ray;
+use crate::vector::Vector;
 
 pub struct Sphere {
     center: Vector,

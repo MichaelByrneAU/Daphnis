@@ -1,10 +1,10 @@
 use indicatif::{ProgressBar, ProgressStyle};
 use rand::Rng;
 
-use crate::vector::Vector;
 use crate::objects::Object;
 use crate::ray::Ray;
 use crate::scene::Scene;
+use crate::vector::Vector;
 
 pub fn render(scene: Scene) -> Vec<u8> {
     let rays = (scene.width * scene.height * scene.samples) as usize;

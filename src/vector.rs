@@ -44,6 +44,23 @@ impl Vector {
             z: lhs.x * rhs.y - lhs.y * rhs.x,
         }
     }
+
+    /// Generate random Vector within a unit sphere.
+    pub fn random() -> Vector {
+        let mut point = Vector::new(std::f64::MAX, std::f64::MAX, std::f64::MAX);
+        let mut rng = rand::thread_rng();
+        loop {
+            if point.squared_length() < 1.0 {
+                break;
+            }
+            point = Vector::new(
+                rng.gen_range(-0.5, 0.5),
+                rng.gen_range(-0.5, 0.5),
+                rng.gen_range(-0.5, 0.5),
+            );
+        }
+        point
+    }
 }
 
 // Operator overloading (vector only)
@@ -240,22 +257,6 @@ impl ops::DivAssign<f64> for Vector {
             z: self.z / rhs,
         }
     }
-}
-
-pub fn random_in_unit_sphere() -> Vector {
-    let mut point = Vector::new(std::f64::MAX, std::f64::MAX, std::f64::MAX);
-    let mut rng = rand::thread_rng();
-    loop {
-        if point.squared_length() < 1.0 {
-            break;
-        }
-        point = Vector::new(
-            rng.gen_range(-0.5, 0.5),
-            rng.gen_range(-0.5, 0.5),
-            rng.gen_range(-0.5, 0.5),
-        );
-    }
-    point
 }
 
 #[cfg(test)]
