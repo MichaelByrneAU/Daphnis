@@ -1,8 +1,9 @@
 use indicatif::{ProgressBar, ProgressStyle};
 use rand::Rng;
 
-use crate::geometry::{Ray, Vec3};
+use crate::geometry::Vec3;
 use crate::objects::Object;
+use crate::ray::Ray;
 use crate::scene::Scene;
 
 pub fn render(scene: Scene) -> Vec<u8> {

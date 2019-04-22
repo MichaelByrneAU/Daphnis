@@ -5,6 +5,7 @@ mod camera;
 mod geometry;
 mod materials;
 mod objects;
+mod ray;
 mod render;
 mod scene;
 

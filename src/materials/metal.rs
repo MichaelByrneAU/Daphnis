@@ -1,6 +1,7 @@
-use crate::geometry::{random_in_unit_sphere, Ray, Vec3};
+use crate::geometry::{random_in_unit_sphere, Vec3};
 use crate::materials::{Material, Scatter};
 use crate::objects::HitRecord;
+use crate::ray::Ray;
 
 #[derive(Debug)]
 pub struct Metal {
