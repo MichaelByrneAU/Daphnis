@@ -33,15 +33,15 @@ impl Vector {
 
 // Vector-specific operations
 impl Vector {
-    pub fn dot(&self, other: Vector) -> f64 {
-        self.x * other.x + self.y * other.y + self.z * other.z
+    pub fn dot(lhs: &Vector, rhs: &Vector) -> f64 {
+        lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z
     }
 
-    pub fn cross(&self, other: Vector) -> Vector {
+    pub fn cross(lhs: &Vector, rhs: &Vector) -> Vector {
         Vector {
-            x: self.y * other.z - self.z * other.y,
-            y: -(self.x * other.z - self.z * other.x),
-            z: self.x * other.y - self.y * other.x,
+            x: lhs.y * rhs.z - lhs.z * rhs.y,
+            y: -(lhs.x * rhs.z - lhs.z * rhs.x),
+            z: lhs.x * rhs.y - lhs.y * rhs.x,
         }
     }
 }
@@ -321,14 +321,14 @@ mod tests {
 
     #[test]
     fn vector_dot() {
-        let given = Vector::new(1.0, 2.0, 3.0).dot(Vector::new(4.0, 5.0, 6.0));
+        let given = Vector::dot(&Vector::new(1.0, 2.0, 3.0), &Vector::new(4.0, 5.0, 6.0));
         let expected = 32.0;
         assert_approx_eq!(given, expected);
     }
 
     #[test]
     fn vector_cross() {
-        let given = Vector::new(1.0, 2.0, 3.0).cross(Vector::new(4.0, 5.0, 6.0));
+        let given = Vector::cross(&Vector::new(1.0, 2.0, 3.0), &Vector::new(4.0, 5.0, 6.0));
         let expected = Vector::new(-3.0, 6.0, -3.0);
         vec_approx_equal(given, expected);
     }

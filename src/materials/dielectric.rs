@@ -25,14 +25,15 @@ impl Material for Dielectric {
         let ni_over_nt;
         let cosine;
 
-        if r_in.direction.dot(hit.normal) > 0.0 {
+        if Vector::dot(&r_in.direction, &hit.normal) > 0.0 {
             outward_normal = -hit.normal;
             ni_over_nt = self.ref_idx;
-            cosine = self.ref_idx * r_in.direction.dot(hit.normal) / r_in.direction.length();
+            cosine =
+                self.ref_idx * Vector::dot(&r_in.direction, &hit.normal) / r_in.direction.length();
         } else {
             outward_normal = hit.normal;
             ni_over_nt = 1.0 / self.ref_idx;
-            cosine = -r_in.direction.dot(hit.normal) / r_in.direction.length();
+            cosine = Vector::dot(&-r_in.direction, &hit.normal) / r_in.direction.length();
         };
 
         let mut rng = rand::thread_rng();
@@ -52,12 +53,12 @@ impl Material for Dielectric {
 }
 
 fn reflect(v: &Vector, n: &Vector) -> Vector {
-    *v - 2.0 * v.dot(*n) * *n
+    *v - 2.0 * Vector::dot(&v, n) * *n
 }
 
 fn refract(v: &Vector, n: &Vector, ni_over_nt: f64) -> Option<Vector> {
     let uv = v.unit_vector();
-    let dt = uv.dot(*n);
+    let dt = Vector::dot(&uv, n);
     let discriminant = 1.0 - ni_over_nt * ni_over_nt * (1.0 - dt * dt);
     if discriminant > 0.0 {
         Some(ni_over_nt * (uv - *n * dt) - *n * discriminant.sqrt())

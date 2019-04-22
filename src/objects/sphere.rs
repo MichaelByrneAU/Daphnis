@@ -25,9 +25,9 @@ impl Object for Sphere {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = r.origin - self.center;
 
-        let a = r.direction.dot(r.direction);
-        let b = oc.dot(r.direction);
-        let c = oc.dot(oc) - self.radius * self.radius;
+        let a = Vector::dot(&r.direction, &r.direction);
+        let b = Vector::dot(&oc, &r.direction);
+        let c = Vector::dot(&oc, &oc) - self.radius * self.radius;
 
         let discriminant = b * b - a * c;
         if discriminant > 0.0 {

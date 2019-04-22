@@ -25,5 +25,5 @@ impl Material for Metal {
 }
 
 fn reflect(v: &Vector, n: &Vector) -> Vector {
-    *v - 2.0 * v.dot(*n) * *n
+    *v - 2.0 * Vector::dot(&v, n) * *n
 }

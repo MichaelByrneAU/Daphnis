@@ -28,8 +28,8 @@ impl Camera {
         let half_width = aspect * half_height;
 
         let w = (look_from - look_at).unit_vector();
-        let u = v_up.cross(w).unit_vector();
-        let v = w.cross(u);
+        let u = Vector::cross(&v_up, &w).unit_vector();
+        let v = Vector::cross(&w, &u);
 
         let origin = look_from;
         let lower_left_corner =
