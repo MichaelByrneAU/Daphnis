@@ -254,3 +254,226 @@ pub fn random_in_unit_sphere() -> Vector {
     }
     point
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use assert_approx_eq::assert_approx_eq;
+
+    // Utility function to check the approximate equality of two vectors.
+    //
+    // Direct equality comparison between two vectors is unavailable due to
+    // the underlying float representation.
+    fn vec_approx_equal(v1: Vector, v2: Vector) {
+        assert_approx_eq!(v1.x, v2.x);
+        assert_approx_eq!(v1.y, v2.y);
+        assert_approx_eq!(v1.z, v2.z);
+    }
+
+    // Construction
+
+    #[test]
+    fn vector_new() {
+        let given = Vector::new(1.0, 2.0, 3.0);
+        let expected = Vector {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+        vec_approx_equal(given, expected);
+    }
+
+    // Computed properties
+
+    #[test]
+    fn vector_squared_length() {
+        let given = Vector::new(0.0, 0.0, 0.0).squared_length();
+        let expected = 0.0;
+        assert_approx_eq!(given, expected);
+
+        let given = Vector::new(1.0, 2.0, 3.0).squared_length();
+        let expected = 14.0;
+        assert_approx_eq!(given, expected);
+    }
+
+    #[test]
+    fn vector_length() {
+        let given = Vector::new(0.0, 0.0, 0.0).length();
+        let expected = 0.0;
+        assert_approx_eq!(given, expected);
+
+        let given = Vector::new(1.0, 2.0, 3.0).length();
+        let expected = 14.0_f64.sqrt();
+        assert_approx_eq!(given, expected);
+    }
+
+    #[test]
+    fn vector_unit_vector() {
+        let given = Vector::new(1.0, 2.0, 3.0).unit_vector();
+        let expected = Vector::new(0.267261, 0.534522, 0.801784);
+        vec_approx_equal(given, expected);
+    }
+
+    // Vector operations
+
+    #[test]
+    fn vector_dot() {
+        let given = Vector::new(1.0, 2.0, 3.0).dot(Vector::new(4.0, 5.0, 6.0));
+        let expected = 32.0;
+        assert_approx_eq!(given, expected);
+    }
+
+    #[test]
+    fn vector_cross() {
+        let given = Vector::new(1.0, 2.0, 3.0).cross(Vector::new(4.0, 5.0, 6.0));
+        let expected = Vector::new(-3.0, 6.0, -3.0);
+        vec_approx_equal(given, expected);
+    }
+
+    // Operator overloading (vector only)
+
+    #[test]
+    fn vector_index() {
+        let given = Vector::new(1.0, 2.0, 3.0);
+        assert_approx_eq!(given[0], 1.0);
+        assert_approx_eq!(given[1], 2.0);
+        assert_approx_eq!(given[2], 3.0);
+    }
+
+    #[test]
+    #[should_panic]
+    fn vector_index_out_of_bounds() {
+        let given = Vector::new(1.0, 2.0, 3.0);
+        let _ = given[4];
+    }
+
+    #[test]
+    fn vector_index_mut() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given[0] = 2.0;
+        given[1] = 3.0;
+        given[2] = 4.0;
+        let expected = Vector::new(2.0, 3.0, 4.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    #[should_panic]
+    fn vector_index_mut_out_of_bounds() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given[4] = 4.0;
+    }
+
+    #[test]
+    fn vector_neg() {
+        let given = -Vector::new(-1.0, 2.0, -3.0);
+        let expected = Vector::new(1.0, -2.0, 3.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_add() {
+        let given = Vector::new(1.0, 2.0, 3.0) + Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(4.0, 4.0, 4.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_add_assign() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given += Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(4.0, 4.0, 4.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_sub() {
+        let given = Vector::new(1.0, 2.0, 3.0) - Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(-2.0, 0.0, 2.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_sub_assign() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given -= Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(-2.0, 0.0, 2.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_mul_vector() {
+        let given = Vector::new(1.0, 2.0, 3.0) * Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(3.0, 4.0, 3.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_mul_assign_vector() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given *= Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(3.0, 4.0, 3.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_div_vector() {
+        let given = Vector::new(1.0, 2.0, 3.0) / Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(0.333333, 1.0, 3.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_div_assign_vector() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given /= Vector::new(3.0, 2.0, 1.0);
+        let expected = Vector::new(0.333333, 1.0, 3.0);
+        vec_approx_equal(given, expected);
+    }
+
+    // Operator overloading (vector only)
+
+    #[test]
+    fn vector_mul_float() {
+        let given = Vector::new(1.0, 2.0, 3.0) * 3.0;
+        let expected = Vector::new(3.0, 6.0, 9.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn float_mul_vector() {
+        let given = 3.0 * Vector::new(1.0, 2.0, 3.0);
+        let expected = Vector::new(3.0, 6.0, 9.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_mul_assign_float() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given *= 3.0;
+        let expected = Vector::new(3.0, 6.0, 9.0);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_div_float() {
+        let given = Vector::new(1.0, 2.0, 3.0) / 2.0;
+        let expected = Vector::new(0.5, 1.0, 1.5);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn float_div_vector() {
+        let given = 2.0 / Vector::new(1.0, 2.0, 3.0);
+        let expected = Vector::new(2.0, 1.0, 0.666667);
+        vec_approx_equal(given, expected);
+    }
+
+    #[test]
+    fn vector_div_assign_float() {
+        let mut given = Vector::new(1.0, 2.0, 3.0);
+        given /= 2.0;
+        let expected = Vector::new(0.5, 1.0, 1.5);
+        vec_approx_equal(given, expected);
+    }
+}
