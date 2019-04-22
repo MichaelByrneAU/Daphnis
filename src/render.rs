@@ -60,7 +60,7 @@ fn colour(r: &Ray, world: &Object, depth: i32) -> Vec3 {
         }
         None => {
             let unit_direction = r.direction.unit_vector();
-            let t = 0.5 * (unit_direction.1 + 1.0);
+            let t = 0.5 * (unit_direction.y + 1.0);
             (1.0 - t) * Vec3::new(1.0, 1.0, 1.0) + t * Vec3::new(0.5, 0.7, 1.0)
         }
     }
