@@ -27,8 +27,8 @@ impl Camera {
         let half_height = (theta / 2.0).tan();
         let half_width = aspect * half_height;
 
-        let w = (look_from - look_at).unit_vector();
-        let u = Vector::cross(&v_up, &w).unit_vector();
+        let w = (look_from - look_at).unit();
+        let u = Vector::cross(&v_up, &w).unit();
         let v = Vector::cross(&w, &u);
 
         let origin = look_from;

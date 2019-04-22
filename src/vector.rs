@@ -26,7 +26,7 @@ impl Vector {
         self.squared_length().sqrt()
     }
 
-    pub fn unit_vector(&self) -> Vector {
+    pub fn unit(&self) -> Vector {
         *self / self.length()
     }
 }
@@ -313,7 +313,7 @@ mod tests {
 
     #[test]
     fn vector_unit_vector() {
-        let given = Vector::new(1.0, 2.0, 3.0).unit_vector();
+        let given = Vector::new(1.0, 2.0, 3.0).unit();
         let expected = Vector::new(0.267261, 0.534522, 0.801784);
         vec_approx_equal(given, expected);
     }

@@ -57,7 +57,7 @@ fn reflect(v: &Vector, n: &Vector) -> Vector {
 }
 
 fn refract(v: &Vector, n: &Vector, ni_over_nt: f64) -> Option<Vector> {
-    let uv = v.unit_vector();
+    let uv = v.unit();
     let dt = Vector::dot(&uv, n);
     let discriminant = 1.0 - ni_over_nt * ni_over_nt * (1.0 - dt * dt);
     if discriminant > 0.0 {
