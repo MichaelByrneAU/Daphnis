@@ -9,13 +9,15 @@ pub struct Vector {
     pub z: f64,
 }
 
+// Construction
 impl Vector {
     pub fn new(x: f64, y: f64, z: f64) -> Vector {
         Vector { x, y, z }
     }
+}
 
-    // Computed properties
-
+// Computed properties
+impl Vector {
     pub fn squared_length(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
@@ -27,9 +29,10 @@ impl Vector {
     pub fn unit_vector(&self) -> Vector {
         *self / self.length()
     }
+}
 
-    // Operations
-
+// Vector-specific operations
+impl Vector {
     pub fn dot(&self, other: Vector) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
