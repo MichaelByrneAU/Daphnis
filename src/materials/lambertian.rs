@@ -1,15 +1,15 @@
-use crate::geometry::{random_in_unit_sphere, Vec3};
 use crate::materials::{Material, Scatter};
 use crate::objects::HitRecord;
 use crate::ray::Ray;
+use crate::vector::{random_in_unit_sphere, Vector};
 
 #[derive(Debug)]
 pub struct Lambertian {
-    pub albedo: Vec3,
+    pub albedo: Vector,
 }
 
 impl Lambertian {
-    pub fn new(albedo: Vec3) -> Lambertian {
+    pub fn new(albedo: Vector) -> Lambertian {
         Lambertian { albedo }
     }
 }

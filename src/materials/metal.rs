@@ -1,16 +1,16 @@
-use crate::geometry::{random_in_unit_sphere, Vec3};
 use crate::materials::{Material, Scatter};
 use crate::objects::HitRecord;
 use crate::ray::Ray;
+use crate::vector::{random_in_unit_sphere, Vector};
 
 #[derive(Debug)]
 pub struct Metal {
-    pub albedo: Vec3,
+    pub albedo: Vector,
     pub fuzz: f64,
 }
 
 impl Metal {
-    pub fn new(albedo: Vec3, fuzz: f64) -> Metal {
+    pub fn new(albedo: Vector, fuzz: f64) -> Metal {
         let fuzz = if fuzz > 1.0 { 1.0 } else { fuzz };
         Metal { albedo, fuzz }
     }
@@ -24,6 +24,6 @@ impl Material for Metal {
     }
 }
 
-fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
+fn reflect(v: &Vector, n: &Vector) -> Vector {
     *v - 2.0 * v.dot(*n) * *n
 }

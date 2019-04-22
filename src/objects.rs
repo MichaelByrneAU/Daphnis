@@ -1,4 +1,4 @@
-use crate::geometry::Vec3;
+use crate::vector::Vector;
 use crate::materials::Material;
 use crate::ray::Ray;
 
@@ -9,13 +9,13 @@ pub use crate::objects::sphere::Sphere;
 #[derive(Clone, Copy)]
 pub struct HitRecord<'a> {
     pub t: f64,
-    pub p: Vec3,
-    pub normal: Vec3,
+    pub p: Vector,
+    pub normal: Vector,
     pub material: &'a Material,
 }
 
 impl<'a> HitRecord<'a> {
-    pub fn new(t: f64, p: Vec3, normal: Vec3, material: &'a Material) -> HitRecord {
+    pub fn new(t: f64, p: Vector, normal: Vector, material: &'a Material) -> HitRecord {
         HitRecord {
             t,
             p,

@@ -1,17 +1,17 @@
-use crate::geometry::Vec3;
+use crate::vector::Vector;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Ray {
-    pub origin: Vec3,
-    pub direction: Vec3,
+    pub origin: Vector,
+    pub direction: Vector,
 }
 
 impl Ray {
-    pub fn new(origin: Vec3, direction: Vec3) -> Ray {
+    pub fn new(origin: Vector, direction: Vector) -> Ray {
         Ray { origin, direction }
     }
 
-    pub fn point_at_parameter(&self, t: f64) -> Vec3 {
+    pub fn point_at_parameter(&self, t: f64) -> Vector {
         self.origin + t * self.direction
     }
 }

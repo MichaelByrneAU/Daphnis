@@ -1,18 +1,18 @@
 #![allow(clippy::many_single_char_names)]
 
-use crate::geometry::Vec3;
+use crate::vector::Vector;
 use crate::materials::Material;
 use crate::objects::{HitRecord, Object};
 use crate::ray::Ray;
 
 pub struct Sphere {
-    center: Vec3,
+    center: Vector,
     radius: f64,
     material: Box<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f64, material: Box<dyn Material>) -> Sphere {
+    pub fn new(center: Vector, radius: f64, material: Box<dyn Material>) -> Sphere {
         Sphere {
             center,
             radius,

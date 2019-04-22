@@ -1,23 +1,23 @@
 use std::f64::consts::PI;
 
-use crate::geometry::{random_in_unit_sphere, Vec3};
+use crate::vector::{random_in_unit_sphere, Vector};
 use crate::ray::Ray;
 
 pub struct Camera {
-    origin: Vec3,
-    lower_left_corner: Vec3,
-    horizontal: Vec3,
-    vertical: Vec3,
-    u: Vec3,
-    v: Vec3,
+    origin: Vector,
+    lower_left_corner: Vector,
+    horizontal: Vector,
+    vertical: Vector,
+    u: Vector,
+    v: Vector,
     lens_radius: f64,
 }
 
 impl Camera {
     pub fn new(
-        look_from: Vec3,
-        look_at: Vec3,
-        v_up: Vec3,
+        look_from: Vector,
+        look_at: Vector,
+        v_up: Vector,
         v_fov: f64,
         aspect: f64,
         aperture: f64,

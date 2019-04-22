@@ -1,8 +1,8 @@
 use std::fmt::Debug;
 
-use crate::geometry::Vec3;
 use crate::objects::HitRecord;
 use crate::ray::Ray;
+use crate::vector::Vector;
 
 mod dielectric;
 mod lambertian;
@@ -14,12 +14,12 @@ pub use crate::materials::metal::Metal;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Scatter {
-    pub attenuation: Vec3,
+    pub attenuation: Vector,
     pub ray: Ray,
 }
 
 impl Scatter {
-    pub fn new(attenuation: Vec3, ray: Ray) -> Scatter {
+    pub fn new(attenuation: Vector, ray: Ray) -> Scatter {
         Scatter { attenuation, ray }
     }
 }

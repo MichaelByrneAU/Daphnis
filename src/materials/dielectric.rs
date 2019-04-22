@@ -1,9 +1,9 @@
 use rand::Rng;
 
-use crate::geometry::Vec3;
 use crate::materials::{Material, Scatter};
 use crate::objects::HitRecord;
 use crate::ray::Ray;
+use crate::vector::Vector;
 
 #[derive(Debug)]
 pub struct Dielectric {
@@ -19,7 +19,7 @@ impl Dielectric {
 impl Material for Dielectric {
     fn scatter(&self, r_in: &Ray, hit: &HitRecord) -> Scatter {
         let reflected = reflect(&r_in.direction, &hit.normal);
-        let attenuation = Vec3::new(1.0, 1.0, 1.0);
+        let attenuation = Vector::new(1.0, 1.0, 1.0);
 
         let outward_normal;
         let ni_over_nt;
@@ -51,11 +51,11 @@ impl Material for Dielectric {
     }
 }
 
-fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
+fn reflect(v: &Vector, n: &Vector) -> Vector {
     *v - 2.0 * v.dot(*n) * *n
 }
 
-fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f64) -> Option<Vec3> {
+fn refract(v: &Vector, n: &Vector, ni_over_nt: f64) -> Option<Vector> {
     let uv = v.unit_vector();
     let dt = uv.dot(*n);
     let discriminant = 1.0 - ni_over_nt * ni_over_nt * (1.0 - dt * dt);
