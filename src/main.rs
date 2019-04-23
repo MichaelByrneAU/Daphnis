@@ -9,7 +9,7 @@ mod render;
 mod scene;
 mod vector;
 
-use camera::Camera;
+use camera::{Camera, Lens, Orientation};
 
 use materials::{Dielectric, Lambertian, Metal};
 use objects::{ObjectList, Sphere};
@@ -22,19 +22,14 @@ fn main() {
     let ns = 1;
 
     // Initialise camera
-    let look_from = Vector::new(13.0, 2.0, 3.0);
-    let look_at = Vector::new(0.0, 0.0, 0.0);
-    let dist_to_focus = 10.0;
-
-    let camera = Camera::new(
-        look_from,
-        look_at,
+    let orientation = Orientation::new(
+        Vector::new(13.0, 2.0, 3.0),
+        Vector::new(0.0, 0.0, 0.0),
         Vector::new(0.0, 1.0, 0.0),
-        20.0,
-        f64::from(nx) / f64::from(ny),
-        0.1,
-        dist_to_focus,
     );
+    let lens = Lens::new(20.0, 0.1, 10.0);
+    let aspect = f64::from(nx) / f64::from(ny);
+    let camera = Camera::new(orientation, lens, aspect);
 
     // Initialise world
     let world = random_world();
