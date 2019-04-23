@@ -1,53 +1,39 @@
 use rand::Rng;
 
-use crate::materials::{Material, Scatter};
+use crate::materials::Scatter;
 use crate::objects::HitRecord;
 use crate::ray::Ray;
 use crate::vector::Vector;
 
-#[derive(Debug)]
-pub struct Dielectric {
-    pub ref_idx: f64,
-}
+pub fn scatter(ref_idx: f64, r_in: &Ray, hit: &HitRecord) -> Scatter {
+    let reflected = reflect(&r_in.direction, &hit.normal);
+    let attenuation = Vector::new(1.0, 1.0, 1.0);
 
-impl Dielectric {
-    pub fn new(ref_idx: f64) -> Dielectric {
-        Dielectric { ref_idx }
-    }
-}
+    let outward_normal;
+    let ni_over_nt;
+    let cosine;
 
-impl Material for Dielectric {
-    fn scatter(&self, r_in: &Ray, hit: &HitRecord) -> Scatter {
-        let reflected = reflect(&r_in.direction, &hit.normal);
-        let attenuation = Vector::new(1.0, 1.0, 1.0);
+    if Vector::dot(&r_in.direction, &hit.normal) > 0.0 {
+        outward_normal = -hit.normal;
+        ni_over_nt = ref_idx;
+        cosine = ref_idx * Vector::dot(&r_in.direction, &hit.normal) / r_in.direction.length();
+    } else {
+        outward_normal = hit.normal;
+        ni_over_nt = 1.0 / ref_idx;
+        cosine = Vector::dot(&-r_in.direction, &hit.normal) / r_in.direction.length();
+    };
 
-        let outward_normal;
-        let ni_over_nt;
-        let cosine;
+    let mut rng = rand::thread_rng();
+    let prob = rng.gen_range(0.0, 1.0);
+    let reflect_prob = schlick(cosine, ref_idx);
 
-        if Vector::dot(&r_in.direction, &hit.normal) > 0.0 {
-            outward_normal = -hit.normal;
-            ni_over_nt = self.ref_idx;
-            cosine =
-                self.ref_idx * Vector::dot(&r_in.direction, &hit.normal) / r_in.direction.length();
-        } else {
-            outward_normal = hit.normal;
-            ni_over_nt = 1.0 / self.ref_idx;
-            cosine = Vector::dot(&-r_in.direction, &hit.normal) / r_in.direction.length();
-        };
-
-        let mut rng = rand::thread_rng();
-        let prob = rng.gen_range(0.0, 1.0);
-        let reflect_prob = schlick(cosine, self.ref_idx);
-
-        if prob < reflect_prob {
-            Scatter::new(attenuation, Ray::new(hit.p, reflected))
-        } else {
-            let refraction = refract(&r_in.direction, &outward_normal, ni_over_nt);
-            match refraction {
-                Some(refracted) => Scatter::new(attenuation, Ray::new(hit.p, refracted)),
-                None => Scatter::new(attenuation, Ray::new(hit.p, reflected)),
-            }
+    if prob < reflect_prob {
+        Scatter::new(attenuation, Ray::new(hit.p, reflected))
+    } else {
+        let refraction = refract(&r_in.direction, &outward_normal, ni_over_nt);
+        match refraction {
+            Some(refracted) => Scatter::new(attenuation, Ray::new(hit.p, refracted)),
+            None => Scatter::new(attenuation, Ray::new(hit.p, reflected)),
         }
     }
 }

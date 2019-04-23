@@ -11,7 +11,11 @@ pub struct Orientation {
 
 impl Orientation {
     pub fn new(look_from: Vector, look_at: Vector, v_up: Vector) -> Orientation {
-        Orientation { look_from, look_at, v_up }
+        Orientation {
+            look_from,
+            look_at,
+            v_up,
+        }
     }
 }
 
@@ -23,7 +27,11 @@ pub struct Lens {
 
 impl Lens {
     pub fn new(v_fov: f64, aperture: f64, focus_dist: f64) -> Lens {
-        Lens { v_fov, aperture, focus_dist }
+        Lens {
+            v_fov,
+            aperture,
+            focus_dist,
+        }
     }
 }
 
@@ -43,7 +51,7 @@ impl Camera {
         let look_from = orientation.look_from;
         let look_at = orientation.look_at;
         let v_up = orientation.v_up;
-        
+
         let v_fov = lens.v_fov;
         let aperture = lens.aperture;
         let focus_dist = lens.focus_dist;

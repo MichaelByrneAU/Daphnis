@@ -11,10 +11,11 @@ mod vector;
 
 use camera::{Camera, Lens, Orientation};
 
-use materials::{Dielectric, Lambertian, Metal};
+use materials::Material;
 use objects::{ObjectList, Sphere};
 use scene::Scene;
 use vector::Vector;
+
 fn main() {
     // Initialise image size and quality
     let nx = 1200;
@@ -51,7 +52,7 @@ fn random_world() -> ObjectList {
     world.0.push(Box::new(Sphere::new(
         Vector::new(0.0, -1000.0, 0.0),
         1000.0,
-        Box::new(Lambertian::new(Vector::new(0.5, 0.5, 0.5))),
+        Material::new_lambertian(Vector::new(0.5, 0.5, 0.5)),
     )));
 
     // Little balls
@@ -69,30 +70,30 @@ fn random_world() -> ObjectList {
                     world.0.push(Box::new(Sphere::new(
                         center,
                         0.2,
-                        Box::new(Lambertian::new(Vector::new(
+                        Material::new_lambertian(Vector::new(
                             rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
                             rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
                             rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
-                        ))),
+                        )),
                     )));
                 } else if choose_mat < 0.95 {
                     world.0.push(Box::new(Sphere::new(
                         center,
                         0.2,
-                        Box::new(Metal::new(
+                        Material::new_metal(
                             Vector::new(
                                 rng.gen_range(0.5, 1.0),
                                 rng.gen_range(0.5, 1.0),
                                 rng.gen_range(0.5, 1.0),
                             ),
                             0.5 * rng.gen_range(0.0, 0.5),
-                        )),
+                        ),
                     )));
                 } else {
                     world.0.push(Box::new(Sphere::new(
                         center,
                         0.2,
-                        Box::new(Dielectric::new(1.5)),
+                        Material::new_dielectric(1.5),
                     )))
                 }
             }
@@ -103,17 +104,17 @@ fn random_world() -> ObjectList {
     world.0.push(Box::new(Sphere::new(
         Vector::new(0.0, 1.0, 0.0),
         1.0,
-        Box::new(Dielectric::new(1.5)),
+        Material::new_dielectric(1.5),
     )));
     world.0.push(Box::new(Sphere::new(
         Vector::new(-4.0, 1.0, 0.0),
         1.0,
-        Box::new(Lambertian::new(Vector::new(0.4, 0.2, 0.1))),
+        Material::new_lambertian(Vector::new(0.4, 0.2, 0.1)),
     )));
     world.0.push(Box::new(Sphere::new(
         Vector::new(4.0, 1.0, 0.0),
         1.0,
-        Box::new(Metal::new(Vector::new(0.7, 0.6, 0.5), 0.0)),
+        Material::new_metal(Vector::new(0.7, 0.6, 0.5), 0.0),
     )));
 
     world

@@ -8,11 +8,11 @@ use crate::vector::Vector;
 pub struct Sphere {
     center: Vector,
     radius: f64,
-    material: Box<dyn Material>,
+    material: Material,
 }
 
 impl Sphere {
-    pub fn new(center: Vector, radius: f64, material: Box<dyn Material>) -> Sphere {
+    pub fn new(center: Vector, radius: f64, material: Material) -> Sphere {
         Sphere {
             center,
             radius,
@@ -41,14 +41,14 @@ impl Object for Sphere {
                 t = soln;
                 p = r.point_at_parameter(soln);
                 normal = (p - self.center) / self.radius;
-                return Some(HitRecord::new(t, p, normal, &*self.material));
+                return Some(HitRecord::new(t, p, normal, &self.material));
             }
             let soln = (-b + (b * b - a * c).sqrt()) / a;
             if (soln < t_max) && (soln > t_min) {
                 t = soln;
                 p = r.point_at_parameter(soln);
                 normal = (p - self.center) / self.radius;
-                return Some(HitRecord::new(t, p, normal, &*self.material));
+                return Some(HitRecord::new(t, p, normal, &self.material));
             }
             None
         } else {
