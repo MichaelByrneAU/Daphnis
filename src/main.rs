@@ -12,7 +12,7 @@ mod vector;
 use camera::{Camera, Lens, Orientation};
 
 use materials::Material;
-use objects::{ObjectList, Sphere};
+use objects::Object;
 use scene::Scene;
 use vector::Vector;
 
@@ -45,15 +45,15 @@ fn main() {
     image::save_buffer("output.png", &data, nx, ny, image::RGB(8)).unwrap();
 }
 
-fn random_world() -> ObjectList {
-    let mut world = ObjectList(vec![]);
+fn random_world() -> Object {
+    let mut object_list = vec![];
 
     // Floor
-    world.0.push(Box::new(Sphere::new(
+    object_list.push(Object::new_sphere(
         Vector::new(0.0, -1000.0, 0.0),
         1000.0,
         Material::new_lambertian(Vector::new(0.5, 0.5, 0.5)),
-    )));
+    ));
 
     // Little balls
     let mut rng = rand::thread_rng();
@@ -67,7 +67,7 @@ fn random_world() -> ObjectList {
             );
             if (center - Vector::new(4.0, 0.2, 0.0)).length() > 0.9 {
                 if choose_mat < 0.8 {
-                    world.0.push(Box::new(Sphere::new(
+                    object_list.push(Object::new_sphere(
                         center,
                         0.2,
                         Material::new_lambertian(Vector::new(
@@ -75,9 +75,9 @@ fn random_world() -> ObjectList {
                             rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
                             rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
                         )),
-                    )));
+                    ));
                 } else if choose_mat < 0.95 {
-                    world.0.push(Box::new(Sphere::new(
+                    object_list.push(Object::new_sphere(
                         center,
                         0.2,
                         Material::new_metal(
@@ -88,34 +88,34 @@ fn random_world() -> ObjectList {
                             ),
                             0.5 * rng.gen_range(0.0, 0.5),
                         ),
-                    )));
+                    ));
                 } else {
-                    world.0.push(Box::new(Sphere::new(
+                    object_list.push(Object::new_sphere(
                         center,
                         0.2,
                         Material::new_dielectric(1.5),
-                    )))
+                    ))
                 }
             }
         }
     }
 
     // Big balls
-    world.0.push(Box::new(Sphere::new(
+    object_list.push(Object::new_sphere(
         Vector::new(0.0, 1.0, 0.0),
         1.0,
         Material::new_dielectric(1.5),
-    )));
-    world.0.push(Box::new(Sphere::new(
+    ));
+    object_list.push(Object::new_sphere(
         Vector::new(-4.0, 1.0, 0.0),
         1.0,
         Material::new_lambertian(Vector::new(0.4, 0.2, 0.1)),
-    )));
-    world.0.push(Box::new(Sphere::new(
+    ));
+    object_list.push(Object::new_sphere(
         Vector::new(4.0, 1.0, 0.0),
         1.0,
         Material::new_metal(Vector::new(0.7, 0.6, 0.5), 0.0),
-    )));
+    ));
 
-    world
+    Object::Multiple(object_list)
 }
